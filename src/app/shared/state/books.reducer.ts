@@ -1,5 +1,16 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { Book } from "src/app/shared/models/book.model";
+import { Action } from "@ngrx/store";
+
+const adapter = createEntityAdapter({
+  selectId: (book: Book) => book.id,
+  sortComparer: (a: Book, b: Book) => a.name.localeCompare(b.name)
+});
+
+export interface State extends EntityState<Book> {
+  activeBookId: string | null;
+  books: Book[];
+}
 
 const initialBooks: Book[] = [
   {
@@ -22,6 +33,11 @@ const initialBooks: Book[] = [
   }
 ];
 
+export const initialState: State = adapter.getInitialState({
+  activeBookId: null,
+  books: initialBooks
+});
+
 const createBook = (books: Book[], book: Book) => [...books, book];
 const updateBook = (books: Book[], book: Book) =>
   books.map(w => {
@@ -29,3 +45,10 @@ const updateBook = (books: Book[], book: Book) =>
   });
 const deleteBook = (books: Book[], book: Book) =>
   books.filter(w => book.id !== w.id);
+
+export function reducer(state = initialState, action: Action) {
+  switch (action.type) {
+    default:
+      return state;
+  }
+}
