@@ -4,6 +4,7 @@ import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
 import * as fromRoot from "src/app/shared/state";
 import * as fromBook from "../../actions/books-page.actions";
+import { map, tap } from "rxjs/operators";
 
 @Component({
   selector: "app-books",
@@ -18,12 +19,21 @@ export class BooksPageComponent implements OnInit {
   currentBook$: Observable<Book>;
 
   constructor(private store: Store<fromRoot.State>) {
-    this.books$ = this.store.pipe(select(fromRoot.selectBooks));
-    this.currentBook$ = this.store.pipe(select(fromRoot.selectCurrentBook));
+    this.books$ = this.store.pipe(
+      select(state => state.books),
+      map((bookState: any) => bookState.ids.map(id => bookState.entities[id])),
+      tap((books: Book[]) => this.updateTotals(books))
+    );
+
+    this.currentBook$ = this.store.pipe(
+      select(state => state.books),
+      map((bookState: any) => bookState.entities[bookState.activeBookId])
+    );
   }
 
   ngOnInit() {
     this.removeSelectedBook();
+    this.store.dispatch(new fromBook.Enter());
   }
 
   updateTotals(books: Book[]) {

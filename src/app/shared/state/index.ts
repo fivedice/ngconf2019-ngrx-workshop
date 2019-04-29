@@ -51,13 +51,3 @@ export const selectMoviesEarningsTotal = createSelector(
 );
 
 export const selectBookState = (state: State) => state.books;
-
-export const selectBooks = createSelector(
-  selectBookState,
-  state => state.books
-);
-
-export const selectCurrentBook = createSelector(
-  selectBookState,
-  state => state.books.find(b => b.id === state.activeBookId)
-);

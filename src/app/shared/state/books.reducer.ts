@@ -3,16 +3,10 @@ import {
   BookPageActionType,
   BookPageActions
 } from "src/app/books/actions/books-page.actions";
+import { createEntityAdapter, EntityState, EntityAdapter } from "@ngrx/entity";
 
-// const adapter = createEntityAdapter({
-//   selectId: (book: Book) => book.id,
-//   sortComparer: (a: Book, b: Book) => a.name.localeCompare(b.name)
-// });
-
-export interface BookState {
-  //} extends EntityState<Book> {
+export interface BookState extends EntityState<Book> {
   activeBookId: string | null;
-  books: Book[];
 }
 
 const initialBooks: Book[] = [
@@ -36,15 +30,10 @@ const initialBooks: Book[] = [
   }
 ];
 
-// export const initialState: State = adapter.getInitialState({
-//   activeBookId: null,
-//   books: initialBooks
-// });
-
-export const initialState: BookState = {
-  activeBookId: null,
-  books: initialBooks
-};
+const adapter: EntityAdapter<Book> = createEntityAdapter();
+const initialState = adapter.getInitialState({
+  activeBookId: null
+});
 
 const createBook = (books: Book[], book: Book) => [...books, book];
 const updateBook = (books: Book[], book: Book) =>
@@ -59,6 +48,9 @@ export function reducer(
   action: BookPageActions
 ): BookState {
   switch (action.type) {
+    case BookPageActionType.ENTER:
+      return adapter.addAll(initialBooks, state);
+
     case BookPageActionType.SELECT:
       return { ...state, activeBookId: action.id };
 
@@ -66,13 +58,21 @@ export function reducer(
       return { ...state, activeBookId: null };
 
     case BookPageActionType.CREATE:
-      return { ...state, books: createBook(state.books, action.book) };
+      return adapter.addOne(action.book, state);
 
     case BookPageActionType.UPDATE:
-      return { ...state, books: updateBook(state.books, action.book) };
+      return adapter.updateOne(
+        // id is the id of the entity to change
+        // change is what you want to change it to
+        { id: action.book.id, changes: action.book },
+        state
+      );
 
     case BookPageActionType.DELETE:
-      return { ...state, books: deleteBook(state.books, action.book) };
+      return adapter.removeOne(action.book.id, {
+        ...state,
+        activeBookId: null
+      });
 
     default:
       return state;
