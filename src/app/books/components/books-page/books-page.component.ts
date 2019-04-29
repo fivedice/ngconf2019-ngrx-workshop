@@ -14,9 +14,11 @@ export class BooksPageComponent implements OnInit {
   currentBook: Book;
   total: number;
   books$: Observable<Book[]>;
+  currentBook$: Observable<Book>;
 
   constructor(private store: Store<fromRoot.State>) {
     this.books$ = this.store.pipe(select(fromRoot.selectBooks));
+    this.currentBook$ = this.store.pipe(select(fromRoot.selectCurrentBook));
   }
 
   ngOnInit() {
@@ -30,7 +32,7 @@ export class BooksPageComponent implements OnInit {
   }
 
   onSelect(book: Book) {
-    this.store.dispatch({ type: "select", payload: book });
+    this.store.dispatch({ type: "select", payload: book.id });
   }
 
   onCancel() {

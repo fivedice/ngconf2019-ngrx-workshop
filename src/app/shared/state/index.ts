@@ -1,6 +1,12 @@
-import { ActionReducerMap, createSelector, MetaReducer } from "@ngrx/store";
+import {
+  ActionReducerMap,
+  createSelector,
+  MetaReducer,
+  select
+} from "@ngrx/store";
 import * as fromMovies from "./movie.reducer";
 import * as fromBooks from "./books.reducer";
+import { stat } from "fs";
 
 export interface State {
   movies: fromMovies.State;
@@ -49,4 +55,9 @@ export const selectBookState = (state: State) => state.books;
 export const selectBooks = createSelector(
   selectBookState,
   state => state.books
+);
+
+export const selectCurrentBook = createSelector(
+  selectBookState,
+  state => state.books.find(b => b.id === state.activeBookId)
 );
