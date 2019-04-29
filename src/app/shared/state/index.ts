@@ -51,3 +51,16 @@ export const selectMoviesEarningsTotal = createSelector(
 );
 
 export const selectBookState = (state: State) => state.books;
+export const selectAllBooks = createSelector(
+  selectBookState,
+  fromBooks.selectAll
+);
+export const selectActiveBook = createSelector(
+  selectBookState,
+  fromBooks.selectActiveBook
+);
+
+export const selectBookEarningsTotal = createSelector(
+  selectBookState,
+  fromBooks.selectEarningsTotal
+);

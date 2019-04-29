@@ -4,6 +4,8 @@ import {
   BookPageActions
 } from "src/app/books/actions/books-page.actions";
 import { createEntityAdapter, EntityState, EntityAdapter } from "@ngrx/entity";
+import { createSelector } from "@ngrx/store";
+import { state } from "@angular/animations";
 
 export interface BookState extends EntityState<Book> {
   activeBookId: string | null;
@@ -76,3 +78,21 @@ export function reducer(
       return state;
   }
 }
+
+// I don't like that we are defining selectors in the reducer but we need the adapter?!...
+export const { selectEntities, selectAll } = adapter.getSelectors();
+export const selectActiveBookId = (state: BookState) => state.activeBookId;
+export const selectActiveBook = createSelector(
+  selectEntities,
+  selectActiveBookId,
+  (books, activeBookId: string) => books[activeBookId]
+);
+
+export const selectEarningsTotal = createSelector(
+  selectAll,
+  books =>
+    books.reduce(
+      (total, book) => total + parseInt(`${book.earnings}`, 10) || 0,
+      0
+    )
+);

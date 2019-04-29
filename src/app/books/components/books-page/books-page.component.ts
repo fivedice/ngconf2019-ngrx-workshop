@@ -12,18 +12,14 @@ import { map, tap } from "rxjs/operators";
   styleUrls: ["./books-page.component.css"]
 })
 export class BooksPageComponent implements OnInit {
-  books: Book[];
-  currentBook: Book;
-  total: number;
   books$: Observable<Book[]>;
   currentBook$: Observable<Book>;
+  total$: Observable<number>;
 
   constructor(private store: Store<fromRoot.State>) {
-    this.books$ = this.store.pipe(
-      select(state => state.books),
-      map((bookState: any) => bookState.ids.map(id => bookState.entities[id]))
-      // tap((books: Book[]) => this.updateTotals(books))
-    );
+    this.books$ = this.store.pipe(select(fromRoot.selectAllBooks));
+    this.currentBook$ = this.store.pipe(select(fromRoot.selectActiveBook));
+    this.total$ = this.store.pipe(select(fromRoot.selectBookEarningsTotal));
 
     this.currentBook$ = this.store.pipe(
       select(state => state.books),
@@ -34,12 +30,6 @@ export class BooksPageComponent implements OnInit {
   ngOnInit() {
     this.removeSelectedBook();
     this.store.dispatch(new fromBook.Enter());
-  }
-
-  updateTotals(books: Book[]) {
-    this.total = books.reduce((total, book) => {
-      return total + parseInt(`${book.earnings}`, 10) || 0;
-    }, 0);
   }
 
   onSelect(book: Book) {
