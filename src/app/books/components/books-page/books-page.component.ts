@@ -1,7 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-
 import { Book } from "src/app/shared/models/book.model";
 import { BooksService } from "src/app/shared/services/book.service";
+import { Store, select } from "@ngrx/store";
+import { Observable } from "rxjs";
+import * as fromRoot from "src/app/shared/state";
 
 @Component({
   selector: "app-books",
@@ -12,8 +14,14 @@ export class BooksPageComponent implements OnInit {
   books: Book[];
   currentBook: Book;
   total: number;
+  books$: Observable<Book[]>;
 
-  constructor(private booksService: BooksService) {}
+  constructor(
+    private booksService: BooksService,
+    private store: Store<fromRoot.State>
+  ) {
+    this.books$ = this.store.pipe(select(fromRoot.selectBooks));
+  }
 
   ngOnInit() {
     this.getBooks();

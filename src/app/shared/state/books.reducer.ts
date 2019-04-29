@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { Book } from "src/app/shared/models/book.model";
-import { Action } from "@ngrx/store";
+import { Action, createSelector } from "@ngrx/store";
 
 // const adapter = createEntityAdapter({
 //   selectId: (book: Book) => book.id,
