@@ -30,18 +30,13 @@ const initialBooks: Book[] = [
   }
 ];
 
-const adapter: EntityAdapter<Book> = createEntityAdapter();
+const adapter: EntityAdapter<Book> = createEntityAdapter({
+  sortComparer: (a: Book, b: Book): number => a.name.localeCompare(b.name)
+});
+
 const initialState = adapter.getInitialState({
   activeBookId: null
 });
-
-const createBook = (books: Book[], book: Book) => [...books, book];
-const updateBook = (books: Book[], book: Book) =>
-  books.map(w => {
-    return w.id === book.id ? Object.assign({}, book) : w;
-  });
-const deleteBook = (books: Book[], book: Book) =>
-  books.filter(w => book.id !== w.id);
 
 export function reducer(
   state: BookState = initialState,
@@ -58,7 +53,10 @@ export function reducer(
       return { ...state, activeBookId: null };
 
     case BookPageActionType.CREATE:
-      return adapter.addOne(action.book, state);
+      return adapter.addOne(action.book, {
+        ...state,
+        activeBookId: action.book.id
+      });
 
     case BookPageActionType.UPDATE:
       return adapter.updateOne(

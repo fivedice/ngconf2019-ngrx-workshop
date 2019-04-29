@@ -21,8 +21,8 @@ export class BooksPageComponent implements OnInit {
   constructor(private store: Store<fromRoot.State>) {
     this.books$ = this.store.pipe(
       select(state => state.books),
-      map((bookState: any) => bookState.ids.map(id => bookState.entities[id])),
-      tap((books: Book[]) => this.updateTotals(books))
+      map((bookState: any) => bookState.ids.map(id => bookState.entities[id]))
+      // tap((books: Book[]) => this.updateTotals(books))
     );
 
     this.currentBook$ = this.store.pipe(
