@@ -11,7 +11,7 @@ export enum BookPageActionType {
 
 export class Select implements Action {
   readonly type = BookPageActionType.SELECT;
-  constructor(public payload: string) {}
+  constructor(public id: string) {}
 }
 
 export class ClearSelect implements Action {
@@ -20,17 +20,17 @@ export class ClearSelect implements Action {
 }
 export class Create implements Action {
   readonly type = BookPageActionType.CREATE;
-  constructor(public payload: Book) {}
+  constructor(public book: Book) {}
 }
 
 export class Update implements Action {
   readonly type = BookPageActionType.UPDATE;
-  constructor(public payload: Book) {}
+  constructor(public book: Book) {}
 }
 
 export class Delete implements Action {
   readonly type = BookPageActionType.DELETE;
-  constructor(public payload: Book) {}
+  constructor(public book: Book) {}
 }
 
 export type BookPageActions = Select | ClearSelect | Create | Update | Delete;

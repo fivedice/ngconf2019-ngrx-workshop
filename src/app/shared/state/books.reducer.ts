@@ -60,19 +60,19 @@ export function reducer(
 ): BookState {
   switch (action.type) {
     case BookPageActionType.SELECT:
-      return { ...state, activeBookId: action.payload };
+      return { ...state, activeBookId: action.id };
 
     case BookPageActionType.CLEAR_SELECTION:
       return { ...state, activeBookId: null };
 
     case BookPageActionType.CREATE:
-      return { ...state, books: createBook(state.books, action.payload) };
+      return { ...state, books: createBook(state.books, action.book) };
 
     case BookPageActionType.UPDATE:
-      return { ...state, books: updateBook(state.books, action.payload) };
+      return { ...state, books: updateBook(state.books, action.book) };
 
     case BookPageActionType.DELETE:
-      return { ...state, books: deleteBook(state.books, action.payload) };
+      return { ...state, books: deleteBook(state.books, action.book) };
 
     default:
       return state;
