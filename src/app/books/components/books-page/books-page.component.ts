@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { Book } from "src/app/shared/models/book.model";
-import { BooksService } from "src/app/shared/services/book.service";
 import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
 import * as fromRoot from "src/app/shared/state";
@@ -16,23 +15,12 @@ export class BooksPageComponent implements OnInit {
   total: number;
   books$: Observable<Book[]>;
 
-  constructor(
-    private booksService: BooksService,
-    private store: Store<fromRoot.State>
-  ) {
+  constructor(private store: Store<fromRoot.State>) {
     this.books$ = this.store.pipe(select(fromRoot.selectBooks));
   }
 
   ngOnInit() {
-    this.getBooks();
     this.removeSelectedBook();
-  }
-
-  getBooks() {
-    this.booksService.all().subscribe(books => {
-      this.books = books;
-      this.updateTotals(books);
-    });
   }
 
   updateTotals(books: Book[]) {
@@ -42,43 +30,25 @@ export class BooksPageComponent implements OnInit {
   }
 
   onSelect(book: Book) {
-    this.currentBook = book;
+    this.store.dispatch({ type: "select", payload: book });
   }
 
   onCancel() {
-    this.removeSelectedBook();
+    this.store.dispatch({ type: "clear select" });
   }
 
   removeSelectedBook() {
-    this.currentBook = null;
+    this.store.dispatch({ type: "clear select" });
   }
 
   onSave(book: Book) {
     if (!book.id) {
-      this.saveBook(book);
+      this.store.dispatch({ type: "create", payload: book });
     } else {
-      this.updateBook(book);
+      this.store.dispatch({ type: "update", payload: book });
     }
   }
-
-  saveBook(book: Book) {
-    this.booksService.create(book).subscribe(() => {
-      this.getBooks();
-      this.removeSelectedBook();
-    });
-  }
-
-  updateBook(book: Book) {
-    this.booksService.update(book.id, book).subscribe(() => {
-      this.getBooks();
-      this.removeSelectedBook();
-    });
-  }
-
   onDelete(book: Book) {
-    this.booksService.delete(book.id).subscribe(() => {
-      this.getBooks();
-      this.removeSelectedBook();
-    });
+    this.store.dispatch({ type: "delete", payload: book });
   }
 }

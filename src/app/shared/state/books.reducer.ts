@@ -52,8 +52,26 @@ const updateBook = (books: Book[], book: Book) =>
 const deleteBook = (books: Book[], book: Book) =>
   books.filter(w => book.id !== w.id);
 
-export function reducer(state = initialState, action: Action): BookState {
+export function reducer(
+  state: BookState = initialState,
+  action: any
+): BookState {
   switch (action.type) {
+    case "select":
+      return { ...state, activeBookId: action.payload };
+
+    case "clear select":
+      return { ...state, activeBookId: null };
+
+    case "create":
+      return { ...state, books: createBook(state.books, action.payload) };
+
+    case "update":
+      return { ...state, books: updateBook(state.books, action.payload) };
+
+    case "delete":
+      return { ...state, books: deleteBook(state.books, action.payload) };
+
     default:
       return state;
   }
