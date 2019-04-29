@@ -3,6 +3,7 @@ import { Book } from "src/app/shared/models/book.model";
 import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
 import * as fromRoot from "src/app/shared/state";
+import * as fromBook from "../../actions/books-page.actions";
 
 @Component({
   selector: "app-books",
@@ -32,25 +33,25 @@ export class BooksPageComponent implements OnInit {
   }
 
   onSelect(book: Book) {
-    this.store.dispatch({ type: "select", payload: book.id });
+    this.store.dispatch(new fromBook.Select(book.id));
   }
 
   onCancel() {
-    this.store.dispatch({ type: "clear select" });
+    this.store.dispatch(new fromBook.ClearSelect());
   }
 
   removeSelectedBook() {
-    this.store.dispatch({ type: "clear select" });
+    this.store.dispatch(new fromBook.ClearSelect());
   }
 
   onSave(book: Book) {
     if (!book.id) {
-      this.store.dispatch({ type: "create", payload: book });
+      this.store.dispatch(new fromBook.Create(book));
     } else {
-      this.store.dispatch({ type: "update", payload: book });
+      this.store.dispatch(new fromBook.Update(book));
     }
   }
   onDelete(book: Book) {
-    this.store.dispatch({ type: "delete", payload: book });
+    this.store.dispatch(new fromBook.Delete(book));
   }
 }
