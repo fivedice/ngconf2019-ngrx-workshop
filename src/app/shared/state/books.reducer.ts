@@ -5,7 +5,10 @@ import {
 } from "src/app/books/actions/books-page.actions";
 import { createEntityAdapter, EntityState, EntityAdapter } from "@ngrx/entity";
 import { createSelector } from "@ngrx/store";
-import { state } from "@angular/animations";
+import {
+  BookApiActions,
+  BookApiActionsTypes
+} from "src/app/books/actions/books-api.actions";
 
 export interface BookState extends EntityState<Book> {
   activeBookId: string | null;
@@ -42,10 +45,10 @@ const initialState = adapter.getInitialState({
 
 export function reducer(
   state: BookState = initialState,
-  action: BookPageActions
+  action: BookPageActions | BookApiActions
 ): BookState {
   switch (action.type) {
-    case BookPageActionType.ENTER:
+    case BookApiActionsTypes.BooksLoaded:
       return adapter.addAll(initialBooks, state);
 
     case BookPageActionType.SELECT:
