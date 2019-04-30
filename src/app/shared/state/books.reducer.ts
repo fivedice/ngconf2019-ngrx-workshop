@@ -1,14 +1,7 @@
 import { Book } from "src/app/shared/models/book.model";
-import {
-  BookPageActionType,
-  BookPageActions
-} from "src/app/books/actions/books-page.actions";
 import { createEntityAdapter, EntityState, EntityAdapter } from "@ngrx/entity";
 import { createSelector } from "@ngrx/store";
-import {
-  BookApiActions,
-  BookApiActionsTypes
-} from "src/app/books/actions/books-api.actions";
+import { BooksPageActions, BooksApiActions } from "src/app/books/actions";
 
 export interface BookState extends EntityState<Book> {
   activeBookId: string | null;
@@ -24,25 +17,25 @@ const initialState = adapter.getInitialState({
 
 export function reducer(
   state: BookState = initialState,
-  action: BookPageActions | BookApiActions
+  action: BooksPageActions.Union | BooksApiActions.Union
 ): BookState {
   switch (action.type) {
-    case BookApiActionsTypes.BooksLoaded:
+    case BooksApiActions.booksLoaded.type:
       return adapter.addAll(action.books, state);
 
-    case BookPageActionType.SELECT:
+    case BooksPageActions.selectBook.type:
       return { ...state, activeBookId: action.id };
 
-    case BookPageActionType.CLEAR_SELECTION:
+    case BooksPageActions.clearSelection.type:
       return { ...state, activeBookId: null };
 
-    case BookApiActionsTypes.BookCreated:
+    case BooksApiActions.bookCreated.type:
       return adapter.addOne(action.book, {
         ...state,
         activeBookId: action.book.id
       });
 
-    case BookApiActionsTypes.BookUpdated:
+    case BooksApiActions.bookUpdated.type:
       return adapter.updateOne(
         // id is the id of the entity to change
         // change is what you want to change it to
@@ -50,7 +43,7 @@ export function reducer(
         state
       );
 
-    case BookApiActionsTypes.BookDeleted:
+    case BooksApiActions.bookDeleted.type:
       return adapter.removeOne(action.book.id, {
         ...state,
         activeBookId: null

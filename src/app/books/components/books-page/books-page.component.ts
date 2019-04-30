@@ -29,29 +29,29 @@ export class BooksPageComponent implements OnInit {
 
   ngOnInit() {
     this.removeSelectedBook();
-    this.store.dispatch(new fromBook.Enter());
+    this.store.dispatch(fromBook.enter());
   }
 
   onSelect(book: Book) {
-    this.store.dispatch(new fromBook.Select(book.id));
+    this.store.dispatch(fromBook.selectBook({ id: book.id }));
   }
 
   onCancel() {
-    this.store.dispatch(new fromBook.ClearSelect());
+    this.store.dispatch(fromBook.clearSelection());
   }
 
   removeSelectedBook() {
-    this.store.dispatch(new fromBook.ClearSelect());
+    this.store.dispatch(fromBook.clearSelection());
   }
 
   onSave(book: Book) {
     if (!book.id) {
-      this.store.dispatch(new fromBook.Create(book));
+      this.store.dispatch(fromBook.createBook({ book: book }));
     } else {
-      this.store.dispatch(new fromBook.Update(book));
+      this.store.dispatch(fromBook.updateBook({ book: book }));
     }
   }
   onDelete(book: Book) {
-    this.store.dispatch(new fromBook.Delete(book));
+    this.store.dispatch(fromBook.deleteBook({ book: book }));
   }
 }

@@ -1,35 +1,26 @@
 import { Book } from "src/app/shared/models/book.model";
-import { Action } from "@ngrx/store";
+import { createAction, props } from "@ngrx/store";
 
-export enum BookApiActionsTypes {
-  BooksLoaded = "[Book API] Books Loaded Success",
-  BookCreated = "[Book API] Book Created Success",
-  BookUpdated = "[Book API] Book Updated Success",
-  BookDeleted = "[Book API] Book Deleted Success"
-}
+export const booksLoaded = createAction(
+  "[Book API] Books Loaded Success",
+  props<{ books: Book[] }>()
+);
+export const bookCreated = createAction(
+  "[Book API] Book Created Success",
+  props<{ book: Book }>()
+);
+export const bookUpdated = createAction(
+  "[Book API] Book Updated Success",
+  props<{ book: Book }>()
+);
+export const bookDeleted = createAction(
+  "[Book API] Book Deleted Success",
+  props<{ book: Book }>()
+);
 
-export class BooksLoaded implements Action {
-  readonly type = BookApiActionsTypes.BooksLoaded;
-  constructor(public books: Book[]) {}
-}
-
-export class BookCreated implements Action {
-  readonly type = BookApiActionsTypes.BookCreated;
-  constructor(public book: Book) {}
-}
-
-export class BookUpdated implements Action {
-  readonly type = BookApiActionsTypes.BookUpdated;
-  constructor(public book: Book) {}
-}
-
-export class BookDeleted implements Action {
-  readonly type = BookApiActionsTypes.BookDeleted;
-  constructor(public book: Book) {}
-}
-
-export type BookApiActions =
-  | BooksLoaded
-  | BookCreated
-  | BookUpdated
-  | BookDeleted;
+export type Union = ReturnType<
+  | typeof booksLoaded
+  | typeof bookCreated
+  | typeof bookUpdated
+  | typeof bookDeleted
+>;

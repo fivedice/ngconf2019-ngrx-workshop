@@ -1,47 +1,30 @@
-import { Action } from "@ngrx/store";
+import { createAction, props } from "@ngrx/store";
 import { Book } from "src/app/shared/models/book.model";
 
-export enum BookPageActionType {
-  ENTER = "[Book] Enter",
-  SELECT = "[Book] - Select",
-  CLEAR_SELECTION = "[Book] - Clear Select",
-  CREATE = "[Book] - Create",
-  UPDATE = "[Book] - Update",
-  DELETE = "[Book] - Delete"
-}
+export const enter = createAction("[Book Page] Enter");
+export const selectBook = createAction(
+  "[Book Page] Select Book",
+  props<{ id: string }>()
+);
+export const clearSelection = createAction("[Book Page] Clear Selection");
+export const createBook = createAction(
+  "[Book Page] Create Book",
+  props<{ book: Book }>()
+);
+export const updateBook = createAction(
+  "[Book Page] Update Book",
+  props<{ book: Book }>()
+);
+export const deleteBook = createAction(
+  "[Book Page] Delete Book",
+  props<{ book: Book }>()
+);
 
-export class Enter implements Action {
-  readonly type = BookPageActionType.ENTER;
-}
-
-export class Select implements Action {
-  readonly type = BookPageActionType.SELECT;
-  constructor(public id: string) {}
-}
-
-export class ClearSelect implements Action {
-  readonly type = BookPageActionType.CLEAR_SELECTION;
-}
-
-export class Create implements Action {
-  readonly type = BookPageActionType.CREATE;
-  constructor(public book: Book) {}
-}
-
-export class Update implements Action {
-  readonly type = BookPageActionType.UPDATE;
-  constructor(public book: Book) {}
-}
-
-export class Delete implements Action {
-  readonly type = BookPageActionType.DELETE;
-  constructor(public book: Book) {}
-}
-
-export type BookPageActions =
-  | Enter
-  | Select
-  | ClearSelect
-  | Create
-  | Update
-  | Delete;
+export type Union = ReturnType<
+  | typeof selectBook
+  | typeof clearSelection
+  | typeof enter
+  | typeof createBook
+  | typeof updateBook
+  | typeof deleteBook
+>;

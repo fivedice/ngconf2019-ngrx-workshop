@@ -7,24 +7,24 @@ import {
   exhaustMap,
   concatMap
 } from "rxjs/operators";
-import * as fromBooks from "./actions";
 import { BooksService } from "../shared/services/book.service";
 import { Book } from "../shared/models/book.model";
 import { EMPTY } from "rxjs";
-import { BookPageActions } from "./actions/books-page.actions";
+import { BooksPageActions, BooksApiActions } from "./actions";
 
 @Injectable()
 export class BookApiEffects {
-  constructor(private action$: Actions, private booksService: BooksService) {}
+  constructor(
+    private action$: Actions<BooksPageActions.Union | BooksApiActions.Union>,
+    private booksService: BooksService
+  ) {}
 
   @Effect()
   loadBooks$ = this.action$.pipe(
-    ofType(fromBooks.BooksPageActions.BookPageActionType.ENTER),
+    ofType(BooksPageActions.enter.type),
     exhaustMap(() => {
       return this.booksService.all().pipe(
-        map(
-          (books: Book[]) => new fromBooks.BooksApiActions.BooksLoaded(books)
-        ),
+        map((books: Book[]) => BooksApiActions.booksLoaded({ books: books })),
         catchError(() => EMPTY)
       );
     })
@@ -32,10 +32,10 @@ export class BookApiEffects {
 
   @Effect()
   createBook$ = this.action$.pipe(
-    ofType(fromBooks.BooksPageActions.BookPageActionType.CREATE),
-    concatMap((action: fromBooks.BooksPageActions.Create) =>
+    ofType(BooksPageActions.createBook.type),
+    concatMap(action =>
       this.booksService.create(action.book).pipe(
-        map((book: Book) => new fromBooks.BooksApiActions.BookCreated(book)),
+        map((book: Book) => BooksApiActions.bookCreated({ book: book })),
         catchError(() => EMPTY)
       )
     )
@@ -43,10 +43,10 @@ export class BookApiEffects {
 
   @Effect()
   updateBook$ = this.action$.pipe(
-    ofType(fromBooks.BooksPageActions.BookPageActionType.UPDATE),
-    concatMap((action: fromBooks.BooksPageActions.Update) =>
+    ofType(BooksPageActions.updateBook.type),
+    concatMap(action =>
       this.booksService.update(action.book.id, action.book).pipe(
-        map((book: Book) => new fromBooks.BooksApiActions.BookUpdated(book)),
+        map((book: Book) => BooksApiActions.bookUpdated({ book: book })),
         catchError(() => EMPTY)
       )
     )
@@ -54,10 +54,10 @@ export class BookApiEffects {
 
   @Effect()
   deleteBook$ = this.action$.pipe(
-    ofType(fromBooks.BooksPageActions.BookPageActionType.DELETE),
-    mergeMap((action: fromBooks.BooksPageActions.Delete) =>
+    ofType(BooksPageActions.deleteBook.type),
+    mergeMap(action =>
       this.booksService.delete(action.book.id).pipe(
-        map(() => new fromBooks.BooksApiActions.BookDeleted(action.book)),
+        map(() => BooksApiActions.bookDeleted({ book: action.book })),
         catchError(() => EMPTY)
       )
     )
