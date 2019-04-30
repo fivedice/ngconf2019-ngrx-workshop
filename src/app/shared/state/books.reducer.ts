@@ -15,7 +15,7 @@ export interface BookState extends EntityState<Book> {
 }
 
 const adapter: EntityAdapter<Book> = createEntityAdapter({
-  sortComparer: (a: Book, b: Book): number => a.name.localeCompare(b.name)
+  // sortComparer: (a: Book, b: Book): number => a.name.localeCompare(b.name)
 });
 
 const initialState = adapter.getInitialState({
@@ -36,13 +36,13 @@ export function reducer(
     case BookPageActionType.CLEAR_SELECTION:
       return { ...state, activeBookId: null };
 
-    case BookPageActionType.CREATE:
+    case BookApiActionsTypes.BookCreated:
       return adapter.addOne(action.book, {
         ...state,
         activeBookId: action.book.id
       });
 
-    case BookPageActionType.UPDATE:
+    case BookApiActionsTypes.BookUpdated:
       return adapter.updateOne(
         // id is the id of the entity to change
         // change is what you want to change it to
@@ -50,7 +50,7 @@ export function reducer(
         state
       );
 
-    case BookPageActionType.DELETE:
+    case BookApiActionsTypes.BookDeleted:
       return adapter.removeOne(action.book.id, {
         ...state,
         activeBookId: null
