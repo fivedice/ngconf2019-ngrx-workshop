@@ -14,27 +14,6 @@ export interface BookState extends EntityState<Book> {
   activeBookId: string | null;
 }
 
-const initialBooks: Book[] = [
-  {
-    id: "1",
-    name: "Fellowship of the Ring",
-    earnings: 100000000,
-    description: "The start"
-  },
-  {
-    id: "2",
-    name: "The Two Towers",
-    earnings: 200000000,
-    description: "The middle"
-  },
-  {
-    id: "3",
-    name: "The Return of The King",
-    earnings: 400000000,
-    description: "The end"
-  }
-];
-
 const adapter: EntityAdapter<Book> = createEntityAdapter({
   sortComparer: (a: Book, b: Book): number => a.name.localeCompare(b.name)
 });
@@ -49,7 +28,7 @@ export function reducer(
 ): BookState {
   switch (action.type) {
     case BookApiActionsTypes.BooksLoaded:
-      return adapter.addAll(initialBooks, state);
+      return adapter.addAll(action.books, state);
 
     case BookPageActionType.SELECT:
       return { ...state, activeBookId: action.id };
