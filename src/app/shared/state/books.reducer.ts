@@ -7,11 +7,11 @@ export interface BookState extends EntityState<Book> {
   activeBookId: string | null;
 }
 
-const adapter: EntityAdapter<Book> = createEntityAdapter({
+export const adapter: EntityAdapter<Book> = createEntityAdapter({
   // sortComparer: (a: Book, b: Book): number => a.name.localeCompare(b.name)
 });
 
-const initialState = adapter.getInitialState({
+export const initialState = adapter.getInitialState({
   activeBookId: null
 });
 

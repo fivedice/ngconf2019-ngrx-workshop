@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Books Reducer can create a book 1`] = `
+Object {
+  "activeBookId": "1",
+  "entities": Object {
+    "1": Object {
+      "earnings": 1,
+      "id": "1",
+      "name": "something",
+    },
+  },
+  "ids": Array [
+    "1",
+  ],
+}
+`;
+
+exports[`Books Reducer can delete a book 1`] = `
+Object {
+  "activeBookId": null,
+  "entities": Object {},
+  "ids": Array [],
+}
+`;
+
+exports[`Books Reducer can load all books 1`] = `
+Object {
+  "activeBookId": null,
+  "entities": Object {
+    "1": Object {
+      "earnings": 1,
+      "id": "1",
+      "name": "something",
+    },
+  },
+  "ids": Array [
+    "1",
+  ],
+}
+`;
