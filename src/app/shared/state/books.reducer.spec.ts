@@ -18,6 +18,7 @@ describe("Books Reducer", () => {
   });
 
   it("can load all books", () => {
+    // Could do this with the adapter too:
     const action = booksLoaded({
       books: [{ id: "1", earnings: 1, name: "something" }]
     });
